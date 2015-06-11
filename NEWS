@@ -1,0 +1,37 @@
+Package: globals
+================
+
+Version: 0.3.1 [2015-06-10]
+o More test coverage.
+
+
+Version: 0.3.0 [2015-06-08]
+o Renamed getGlobals() to globalsOf().
+
+
+Version: 0.2.3 [2015-06-08]
+o Added [() for Globals.
+o findGlobals() and getGlobals() gained argument 'substitute'.
+o Added cleanup(..., method="internals").
+
+
+Version: 0.2.2 [2015-05-20]
+o Added Globals class with methods cleanup() and packagesOf().
+  Added as.Globals() to coerce lists to Globals objects.
+
+
+Version: 0.2.1 [2015-05-20]
+o getGlobals() gained argument 'mustExist' for controlling whether
+  to give an error when the corresponding object for an identified
+  global cannot be found or to silently drop the missing global.
+o findGlobals() and getGlobals() gained argument 'method' for
+  controlling whether a "conservative" or a "liberal" algorithm
+  for identifying true globals should be used.
+
+
+Version: 0.2.0 [2015-05-19]
+o Moved globals function from an in-house package to this package.
+
+
+Version: 0.1.0 [2015-02-07]
+o Created.
