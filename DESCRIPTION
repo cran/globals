@@ -1,5 +1,5 @@
 Package: globals
-Version: 0.8.0
+Version: 0.9.0
 Depends: R (>= 3.1.2)
 Imports: codetools
 Title: Identify Global Objects in R Expressions
@@ -15,10 +15,10 @@ LazyLoad: TRUE
 ByteCompile: TRUE
 URL: https://github.com/HenrikBengtsson/globals
 BugReports: https://github.com/HenrikBengtsson/globals/issues
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2017-01-16 21:17:30 UTC; hb
+Packaged: 2017-03-10 06:12:09 UTC; hb
 Author: Henrik Bengtsson [aut, cre, cph]
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
 Repository: CRAN
-Date/Publication: 2017-01-17 00:32:07
+Date/Publication: 2017-03-10 11:49:51
