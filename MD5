@@ -1,12 +1,12 @@
-be5f3987583b43677ecdce46b8bf4072 *DESCRIPTION
+4f43fc41172147176f4db3a815d5946e *DESCRIPTION
 f970927a5b8b055c0645488e58362a8d *NAMESPACE
-de87fe7e0749979f38e817681c0f97d0 *NEWS
+eef4ef58a5902d3df02fd92e3587cafe *NEWS
 f9352d37cfd133fc12bca7b5165675cf *R/Globals-class.R
 6c0d5d7963928449cad8738bae047e8a *R/cleanup.R
 26c6b8c96df2b5d3cbf958ad232c06ed *R/findGlobals.R
 acdc94d7246b61e2a93dc330d8509331 *R/globalsOf.R
 a809c2d87122ac1e7f1132e0c6a03428 *R/packagesOf.R
-87effba7a7d81227053ef19e93c7e85b *R/utils.R
+bff4fd5513917d2d17fa5f9951690904 *R/utils.R
 ee09ba3da4cc0e4d2c9c96835953aad2 *R/walkAST.R
 5377d3f92fe155b5af0bb80fed72a1ab *R/where.R
 6c105aa7e1191c6f71b3c39dcd71df6c *R/zzz.R
@@ -24,6 +24,6 @@ e373e47a402e06c64c0f7d18b0c78508 *tests/dotdotdot.R
 e3e4b49566be287f8beeeaf1346f6ca9 *tests/formulas.R
 ad2b5c6eda487ad12cee5d1794820302 *tests/globalsOf.R
 574e081fe6528451f152c2c1239ce806 *tests/liberal.R
-fe622ce37374f56aa0a4f87acad03aec *tests/utils.R
+ac63f063141fd353a5feacc5896ebc56 *tests/utils.R
 c9bb0296119e85b060ad2a6bce2a4315 *tests/walkAST.R
 7af53138f87e6ef0f9333c9b8176c51d *tests/zzz.R
