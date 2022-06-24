@@ -1,6 +1,6 @@
-f4ea718eac45e75a194f31271ac81975 *DESCRIPTION
+cb06ca0353eb00a4397aa3816dde64fa *DESCRIPTION
 f970927a5b8b055c0645488e58362a8d *NAMESPACE
-7669ceb022c0241c68439e9a749721f4 *NEWS
+311ded1bff56b2e3dbcbec1e929f0841 *NEWS.md
 5abf057f33bd109ca489420755ff6eee *R/Globals-class.R
 565f40ff5e73a439c85d095b47fa24bc *R/cleanup.R
 5bb75d96c97b94726f58cd1e0019dfcd *R/environment_of.R
@@ -8,7 +8,8 @@ f970927a5b8b055c0645488e58362a8d *NAMESPACE
 ec83394447d1f310d57587806e1abc17 *R/globalsOf.R
 0ac3ed0fedf975a941f7138ccb8e7ff5 *R/options.R
 a8a001e1fa7e6476f91d0f22dc3f954b *R/packagesOf.R
-df63a674d8a603162351a11b3e13d96e *R/utils.R
+803b446897dc95401f17ad56de402fe5 *R/utils,conditions.R
+2c777d55a739451c7bbd2373a2cead6a *R/utils.R
 ee09ba3da4cc0e4d2c9c96835953aad2 *R/walkAST.R
 5377d3f92fe155b5af0bb80fed72a1ab *R/where.R
 063cc1d50a8d5dd7d2b184b0c26e88a0 *R/zzz.R
@@ -34,6 +35,6 @@ de96a98bbdd939c26009df32797ffa39 *tests/incl/end.R
 c7740b7f891890f7103006f2a64b37f0 *tests/incl/start,load-only.R
 f178ec5ea5fda0b908700cc54550bf66 *tests/incl/start.R
 344290e5ff01b892969ffaf91d20fc14 *tests/liberal.R
-ca39fd5a34adc023d38e535f7990f486 *tests/utils.R
+c9e701a499f796c7357c63cdf1cce799 *tests/utils.R
 4d6835d9ab2dd497461bdb1aa2cb93d0 *tests/walkAST.R
 7af53138f87e6ef0f9333c9b8176c51d *tests/zzz.R
