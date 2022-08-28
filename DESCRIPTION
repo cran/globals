@@ -1,5 +1,5 @@
 Package: globals
-Version: 0.16.0
+Version: 0.16.1
 Depends: R (>= 3.1.2)
 Imports: codetools
 Title: Identify Global Objects in R Expressions
@@ -21,9 +21,9 @@ URL: https://globals.futureverse.org,
 BugReports: https://github.com/HenrikBengtsson/globals/issues
 RoxygenNote: 7.2.1
 NeedsCompilation: no
-Packaged: 2022-08-05 12:22:38 UTC; hb
+Packaged: 2022-08-28 18:55:52 UTC; hb
 Author: Henrik Bengtsson [aut, cre, cph],
   Davis Vaughan [ctb]
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
 Repository: CRAN
-Date/Publication: 2022-08-05 15:10:02 UTC
+Date/Publication: 2022-08-28 19:20:02 UTC
