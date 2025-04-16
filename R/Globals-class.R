@@ -4,7 +4,7 @@
 #'
 #' @param object A named list.
 #'
-#' @param \dots Not used.
+#' @param \ldots Not used.
 #'
 #' @return An object of class \code{Globals}, which is a \emph{named} list
 #' of the value of the globals, where the element names are the names of

@@ -1,4 +1,4 @@
-source("incl/start.R")
+library(globals)
 
 message("findGlobals() with formula ...")
 
@@ -88,4 +88,3 @@ assert_identical_sets(names(g), c("foo", "map", "{", "~", "typeof", "+", "x", ".
 
 message("globalsOf() with formula ... DONE")
 
-source("incl/end.R")

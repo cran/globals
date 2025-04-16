@@ -1,4 +1,4 @@
-source("incl/start.R")
+library(globals)
 
 message("*** walkAST() ...")
 
@@ -34,6 +34,7 @@ exprs <- list(
 )
 if (requireNamespace("methods")) {
   exprs$s4 <- methods::getClass("MethodDefinition")
+  exprs$s7 <- asS3(methods::getClass("S4")@prototype, complete = FALSE)
 }
 
 nullify <- function(e) NULL
@@ -42,7 +43,7 @@ disp <- function(expr) {
   cat("Expression:\n")
   print(expr)
   cat("str():\n")
-  str(expr)
+  try(str(expr))
   cat(sprintf("typeof: %s\n", typeof(expr)))
   if (is.recursive(expr)) {
     cat("as.list():\n")
@@ -113,4 +114,3 @@ message("*** walkAST() - exceptions ... DONE")
 
 message("*** walkAST() ... DONE")
 
-source("incl/end.R")

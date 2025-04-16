@@ -4,7 +4,7 @@ packagesOf <- function(...) UseMethod("packagesOf")
 #' Identify the packages of the globals
 #'
 #' @param globals A Globals object.
-#' @param \dots Not used.
+#' @param \ldots Not used.
 #'
 #' @return Returns a character vector of package names.
 #'

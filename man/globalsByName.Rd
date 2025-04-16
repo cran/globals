@@ -15,7 +15,7 @@ globalsByName(names, envir = parent.frame(), mustExist = TRUE, ...)
 identified global cannot be located.  Otherwise, the global
 is not returned.}
 
-\item{...}{Not used.}
+\item{\ldots}{Not used.}
 }
 \value{
 A \link{Globals} object of named elements and an attribute

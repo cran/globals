@@ -1,4 +1,4 @@
-source("incl/start.R")
+library(globals)
 
 ## WORKAROUND: Avoid problem reported in testthat Issue #229, which
 ## causes covr::package_coverage() to given an error. /HB 2015-02-16
@@ -50,7 +50,7 @@ not <- list(
   C = c("z"),
   D = c("pathname"),
   E = c("b"),
-  F = c(),
+  F = c("a", "b", "x"),
   G = c(),
   H = c()
 )
@@ -70,12 +70,12 @@ for (kk in seq_along(exprs)) {
   cat(sprintf("Expression #%d ('%s'):\n", kk, key))
   print(expr)
 
-  names <- findGlobals(expr, method = "liberal")
+  names <- findGlobals(expr, method = "conservative")
   cat(sprintf("Globals: %s\n", paste(sQuote(names), collapse = ", ")))
   stopifnot(all(atleast[[key]] %in% names))
   stopifnot(!any(names %in% not[[key]]))
 
-  globals <- globalsOf(expr, method = "liberal", mustExist = FALSE)
+  globals <- globalsOf(expr, method = "conservative")
   cat(sprintf("Globals: %s\n", paste(sQuote(names(globals)), collapse = ", ")))
   stopifnot(all(atleast[[key]] %in% names(globals)))
   stopifnot(!any(names(globals) %in% not[[key]]))
@@ -84,9 +84,7 @@ for (kk in seq_along(exprs)) {
   cat("\n")
 }
 
-names <- findGlobals(exprs, method = "liberal", unlist = TRUE)
+names <- findGlobals(exprs, method = "conservative", unlist = TRUE)
 cat(sprintf("Globals: %s\n", paste(sQuote(names), collapse = ", ")))
 
-
 ## Cleanup
-source("incl/end.R")

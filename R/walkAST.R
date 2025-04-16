@@ -55,10 +55,15 @@ walkAST <- function(expr, atomic = NULL, name = NULL, call = NULL,
     ## FIXME: Should we have a specific function for this, or is atomic() ok?
     ## https://github.com/HenrikBengtsson/globals/issues/27
     if (is.function(atomic)) expr <- atomic(expr)
-  } else if (typeof(expr) %in% c("builtin", "closure", "special",
-                                 "expression", "S4", "environment")) {
+  } else if (typeof(expr) == "closure") {
+    body <- body(expr)
+    body <- walkAST(body, atomic = atomic, name = name, call = call,
+                    pairlist = pairlist, substitute = FALSE)
+    body(expr) <- body
+  } else if (typeof(expr) %in% c("builtin", "special",
+                                 "expression", "S4", "object", "environment")) {
     ## Nothing to do
-    ## FIXME: ... or can closures and specials be "walked"? /HB 2017-03-21
+    ## FIXME: ... or can specials be "walked"? /HB 2017-03-21
     ## FIXME: Should "promise", "char", "...", "any", "externalptr",
     ##  "bytecode", and "weakref" (cf. ?typeof) also be added? /2017-07-01
     return(expr)

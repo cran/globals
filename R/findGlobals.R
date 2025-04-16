@@ -95,6 +95,11 @@ findGlobals <- function(expr, envir = parent.frame(), ...,
     expr <- tweak(expr)
   }
 
+  if (hasCodetoolsBug16()) {
+    debug && mdebug(" - workaround 'codetools' bug #16")
+    expr <- walkAST(expr, call = tweakCodetoolsBug16)
+  }
+
   if (method == "ordered") {
     find_globals_t <- find_globals_ordered
   } else if (method == "conservative") {
@@ -104,7 +109,12 @@ findGlobals <- function(expr, envir = parent.frame(), ...,
   }
 
   globals <- call_find_globals_with_dotdotdot(find_globals_t, expr = expr, envir = envir, dotdotdot = dotdotdot, trace = trace, debug = debug)
-  
+  idx <- which(globals == "codetools.bugfix16:::$<-")
+  if (length(idx) > 0) {
+    globals[idx] <- "$<-"
+    globals <- unique(globals)
+  }
+
   ## Search attributes?
   if (length(attributes) > 0) {
     attrs <- attributes(expr)

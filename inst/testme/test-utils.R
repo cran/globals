@@ -1,4 +1,4 @@
-source("incl/start.R")
+library(globals)
 
 message("*** utils ...")
 
@@ -188,4 +188,3 @@ message("* mdebug() ... DONE")
 
 message("*** utils ... DONE")
 
-source("incl/end.R")

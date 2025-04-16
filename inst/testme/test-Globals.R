@@ -1,4 +1,4 @@
-source("incl/start.R")
+library(globals)
 
 assert_attributes <- function(globals) {
   attrs <- attributes(globals)
@@ -458,4 +458,3 @@ message("*** Globals() - exceptions ... DONE")
 
 message("*** Globals() ... DONE")
 
-source("incl/end.R")

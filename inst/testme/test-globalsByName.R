@@ -1,4 +1,4 @@
-source("incl/start.R")
+library(globals)
 
 message("*** globalsByName() ...")
 
@@ -95,4 +95,3 @@ stopifnot(globals[["..."]]$y == 3, globals[["..."]]$z == 4)
 
 message("*** globalsByName() ... DONE")
 
-source("incl/end.R")

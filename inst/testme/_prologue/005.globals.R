@@ -1,3 +1,5 @@
+eval(envir = globalenv(), quote({
+
 ## Define some globals
 a <- 0
 b <- 2
@@ -29,3 +31,5 @@ exprs <- list(
          ns <- isNamespaceLoaded("foobar")
        })
 )
+
+})) ## eval(...)

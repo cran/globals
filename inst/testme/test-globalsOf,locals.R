@@ -1,4 +1,4 @@
-source("incl/start.R")
+library(globals)
 
 message("*** globalsOf() w/ local() ...")
 
@@ -57,4 +57,3 @@ for (locals in c(TRUE, FALSE)) {
 
 message("*** globalsOf() w/ local() ... DONE")
 
-source("incl/end.R")

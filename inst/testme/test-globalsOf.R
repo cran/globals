@@ -1,4 +1,4 @@
-source("incl/start.R")
+library(globals)
 
 message("*** globalsOf() ...")
 
@@ -282,4 +282,3 @@ stopifnot(inherits(res, "try-error"))
 
 message("*** globalsOf() - exceptions ... DONE")
 
-source("incl/end.R")

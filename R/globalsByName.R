@@ -8,7 +8,7 @@
 #'        identified global cannot be located.  Otherwise, the global
 #'        is not returned.
 #'
-#' @param ... Not used.
+#' @param \ldots Not used.
 #'
 #' @section Special "argument" globals:
 #' If `names` specifies `"..."`, `"..1"`,  `"..2"`, ..., then they

@@ -1,4 +1,4 @@
-source("incl/start.R")
+library(globals)
 
 message("*** cleanup() ...")
 
@@ -65,4 +65,3 @@ stopifnot(identical(names(pruned), c("b")))
 
 message("*** cleanup() ... DONE")
 
-source("incl/end.R")

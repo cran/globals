@@ -1,3 +1,20 @@
+# Version 0.17.0 [2025-04-15]
+
+## New Features
+
+ * `walkAST()` now walks also the body of closures ("functions").
+
+## Bug Fixes
+
+ * `walkAST()` did not recognize objects of type `object`, leading to
+   an error on `Cannot walk expression. Unknown object type 'object'`.
+ * `findGlobals()` would produce `Error in e[[4]] : subscript out of
+ expressions of format` for expressions of type ``LHS INFIX_OP
+ `$<-`(name, value)``, e.g. ``x %>% `$<-`("a", 42)``. This is due to a
+ bug in the **codetools** package, which `findGlobals()` now works
+ around internally.
+
+
 # Version 0.16.3 [2024-03-07]
 
 ## Bug Fixes

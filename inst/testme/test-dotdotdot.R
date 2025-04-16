@@ -1,4 +1,4 @@
-source("incl/start.R")
+library(globals)
 
 options(warn = 2L)
 
@@ -213,4 +213,3 @@ message("*** function(x, ...) globalsOf() ... DONE")
 
 
 ## Cleanup
-source("incl/end.R")

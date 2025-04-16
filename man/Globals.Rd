@@ -14,7 +14,7 @@ Globals(object, ...)
 \arguments{
 \item{object}{A named list.}
 
-\item{\dots}{Not used.}
+\item{\ldots}{Not used.}
 }
 \value{
 An object of class \code{Globals}, which is a \emph{named} list
