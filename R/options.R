@@ -9,6 +9,11 @@ setOption <- function(name, value) {
 
 # Set an R option from an environment variable
 update_package_option <- function(name, mode = "character", default = NULL, split = NULL, trim = TRUE, disallow = c("NA"), force = FALSE, debug = FALSE) {
+  if (debug) {
+    mdebug_push("update_package_option() ...")
+    on.exit(mdebug_pop("update_package_option() ... done"))
+  }
+  
   ## Nothing to do?
   value <- getOption(name, NULL)
   if (!force && !is.null(value)) return(getOption(name, default = default))
@@ -94,4 +99,6 @@ update_package_options <- function(debug = FALSE) {
   update_package_option("globals.globalsOf.locals", mode = "logical", debug = debug)
   update_package_option("globals.selfassign", mode = "logical", debug = debug)
   update_package_option("globals.walkAST.onUnknownType", debug = debug)
+
+  update_package_option("globals.debug.indent", mode = "character", default = " ", debug = debug)
 }

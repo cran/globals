@@ -13,31 +13,31 @@ where <- function(x, where = -1,
   inherits <- as.logical(inherits)
   stop_if_not(inherits %in% c(FALSE, TRUE))
 
-  debug <- mdebug("where(%s, where = %d, envir = %s, mode = %s, inherits = %s) ...",
-         sQuote(x), where, sQuote(envname(envir)), sQuote(mode), inherits)
+  debug <- isTRUE(getOption("globals.future"))
+  if (debug) {
+    mdebugf_push("where(%s, where = %d, envir = %s, mode = %s, inherits = %s) ...", sQuote(x), where, sQuote(envname(envir)), sQuote(mode), inherits)
+    on.exit(mdebugf_pop("where(%s, where = %d, envir = %s, mode = %s, inherits = %s) ...", sQuote(x), where, sQuote(envname(envir)), sQuote(mode), inherits))
+  }
 
   ## Search
   env <- envir
   while (!identical(env, emptyenv())) {
-    debug && mdebug("- searching %s: %s", sQuote(envname(env)),
-                    hpaste(sQuote(ls(envir = env, all.names = TRUE))))
+    if (debug) mdebugf("searching %s: %s", sQuote(envname(env)),
+                       hpaste(sQuote(ls(envir = env, all.names = TRUE))))
     if (exists(x, envir = env, mode = mode, inherits = FALSE)) {
-      debug && mdebug("  + found in location: %s", sQuote(envname(env)))
-      debug && mdebug("where(%s, where = %d, envir = %s, mode = %s, inherits = %s) ... DONE", sQuote(x), where, sQuote(envname(envir)), sQuote(mode), inherits) #nolint
+      if (debug) mdebugf("+ found in location: %s", sQuote(envname(env)))
       return(env)
     }
 
     if (!inherits) {
-      debug && mdebug("  + failed to locate: NULL")
-      debug && mdebug("where(%s, where = %d, envir = %s, mode = %s, inherits = %s) ... DONE", sQuote(x), where, sQuote(envname(envir)), sQuote(mode), inherits) #nolint
+      if (debug) mdebug("+ failed to locate: NULL")
       return(NULL)
     }
 
     env <- parent.env(env)
   }
 
-  debug && mdebug("- failed to locate: NULL")
-  debug && mdebug("where(%s, where = %d, envir = %s, mode = %s, inherits = %s) ... DONE", sQuote(x), where, sQuote(envname(envir)), sQuote(mode), inherits)
+  if (debug) mdebug("failed to locate: NULL")
 
   NULL
 }

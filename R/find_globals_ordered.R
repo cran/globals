@@ -145,6 +145,9 @@ find_globals_ordered <- function(expr, envir, dotdotdot, ..., name = character()
                               enterGlobal = enter_global)
     if (trace) w <- inject_tracer_to_walker(w)
     collect_usage_function(fun, name = "<anonymous>", w, trace = trace)
+  } else if (is.expression(expr)) {
+    if (trace) trace_printf("type = expression\n")
+    
   } else if (is.call(expr) && is.function(expr[[1]])) {
     if (trace) trace_printf("type = a call to a function\n")
     ## AD HOC: Fixes https://github.com/HenrikBengtsson/globals/issues/60
@@ -234,7 +237,7 @@ call_find_globals_with_dotdotdot <- function(FUN, expr, envir, dotdotdot = "erro
     msg <- w$message
     pattern <- ".* ([.][.]([.]|[0-9]+)) may be used in an incorrect context.*"
     if (grepl(pattern, msg, fixed = FALSE)) {
-      debug && mdebug(" - detected: %s", dQuote(trim(msg)))
+      if (debug) mdebug("Warning message detected: %s", dQuote(trim(msg)))
       if (dotdotdot %in% c("ignore", "return", "warning")) {
         if (dotdotdot != "ignore") {
           dotdotdots <<- c(dotdotdots, gsub(pattern, "\\1", msg))

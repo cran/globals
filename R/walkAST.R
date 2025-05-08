@@ -60,8 +60,8 @@ walkAST <- function(expr, atomic = NULL, name = NULL, call = NULL,
     body <- walkAST(body, atomic = atomic, name = name, call = call,
                     pairlist = pairlist, substitute = FALSE)
     body(expr) <- body
-  } else if (typeof(expr) %in% c("builtin", "special",
-                                 "expression", "S4", "object", "environment")) {
+  } else if (typeof(expr) %in% c("builtin", "environment", "expression",
+                                 "externalptr", "S4", "special", "object")) {
     ## Nothing to do
     ## FIXME: ... or can specials be "walked"? /HB 2017-03-21
     ## FIXME: Should "promise", "char", "...", "any", "externalptr",

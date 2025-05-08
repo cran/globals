@@ -32,13 +32,14 @@ globalsByName <- function(names, envir = parent.frame(), mustExist = TRUE,
   
   namesOrg <- names
 
-  debug <- getOption("globals.debug", FALSE)
+  debug <- isTRUE(getOption("globals.debug"))
   if (debug) {
     info <- hpaste(sprintf('"%s"', names))
     if (nnames > 1L) info <- sprintf("<%s> [n=%d]", info, nnames)
     info <- sprintf("%s, mustExist = %s", info, mustExist)
-    mdebug("globalsByName(%s) ...", info)
-    mdebug("- search from environment: %s", sQuote(envname(envir)))
+    mdebugf_push("globalsByName(%s) ...", info)
+    mdebug("search from environment: %s", sQuote(envname(envir)))
+    on.exit(mdebugf_pop("globalsByName(%s) ... done", info))
   }
 
   ## Locate and retrieve the specified globals
@@ -47,19 +48,19 @@ globalsByName <- function(names, envir = parent.frame(), mustExist = TRUE,
     dotdotdots <- unique(names[idxs])
     names <- names[-idxs]
     idxs <- NULL
-    debug && mdebug("- dotdotdots: %s", commaq(dotdotdots))
+    if (debug) mdebugf("dotdotdots: %s", commaq(dotdotdots))
   } else {
     dotdotdots <- NULL
-    debug && mdebug("- dotdotdots: <none>")
+    if (debug) mdebug("dotdotdots: <none>")
   }
 
   globals <- structure(vector("list", length = nnames), names = namesOrg)
   where <- structure(vector("list", length = nnames), names = namesOrg)
   for (kk in seq_along(names)) {
     name <- names[kk]
-    debug && mdebug("- locating #%d (%s)", kk, sQuote(name))
+    if (debug) mdebugf("locating #%d (%s)", kk, sQuote(name))
     env <- where(name, envir = envir, inherits = TRUE)
-    debug && mdebug("  + found in environment: %s", sQuote(envname(env)))
+    if (debug) mdebugf("+ found in environment: %s", sQuote(envname(env)))
     if (!is.null(env)) {
       where[[name]] <- env
       value <- get(name, envir = env, inherits = FALSE)
@@ -120,7 +121,6 @@ globalsByName <- function(names, envir = parent.frame(), mustExist = TRUE,
   if (debug) {
     mdebug("Globals collected:")
     mstr(globals)
-    mdebug("globalsByName(%s) ... DONE", info)
   }
 
   globals

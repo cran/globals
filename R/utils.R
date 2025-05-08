@@ -130,31 +130,6 @@ hexpr <- function(expr, trim = TRUE, collapse = "; ", max_head = 6L,
 } # hexpr()
 
 
-now <- function(x = Sys.time(), format = "[%H:%M:%OS3] ") {
-  ## format(x, format = format) ## slower
-  format(as.POSIXlt(x, tz = ""), format = format)
-}
-
-## From future 1.3.0
-mdebug <- function(...) {
-  if (!getOption("globals.debug", FALSE)) return(invisible(FALSE))
-  message(sprintf(...))
-  invisible(TRUE)
-} ## mdebug()
-
-
-mdebugf <- function(..., appendLF = TRUE, prefix = now(), debug = getOption("globals.debug", FALSE)) {
-  if (!debug) return()
-  message(prefix, sprintf(...), appendLF = appendLF)
-}
-
-#' @importFrom utils capture.output str
-mstr <- function(...) {
-  bfr <- capture.output(str(...))
-  bfr <- paste(bfr, collapse = "\n")
-  message(bfr, appendLF = TRUE)
-}
-
 #' @importFrom utils capture.output
 envname <- function(env) {
   if (!is.environment(env)) return(NA_character_)
@@ -246,11 +221,23 @@ stop_if_not <- function(...) {
 
 ## An lapply(X) without internal X <- as.list(X), without setting names,
 ## and without dispatching using `[[`.
-list_apply <- function(X, FUN, ...) {
-  n <- .length(X)
+list_apply <- function(X, subset = NULL, FUN, ...) {
+  if (is.null(subset)) {
+    n <- .length(X)
+  } else {
+    n <- length(subset)
+  }
   res <- vector("list", length = n)
-  for (kk in seq_len(n)) {
-    res[[kk]] <- FUN(.subset2(X, kk), ...)
+  if (is.environment(X)) {
+    if (is.null(subset)) subset <- names(X)
+    for (name in subset) {
+      res[[name]] <- FUN(.subset2(X, name), ...)
+    }
+  } else {
+    if (is.null(subset)) subset <- seq_len(n)
+    for (kk in subset) {
+      res[[kk]] <- FUN(.subset2(X, kk), ...)
+    }
   }
   res
 }

@@ -17,19 +17,50 @@ findGlobals <- function(expr, envir = parent.frame(), ...,
                         attributes = TRUE,
                         tweak = NULL,
                         dotdotdot = c("warning", "error", "return", "ignore"),
-                        method = c("ordered", "conservative", "liberal"),
+                        method = c("ordered", "conservative", "liberal", "dfs"),
                         substitute = FALSE, unlist = TRUE, trace = FALSE) {
-  method <- match.arg(method, choices = c("ordered", "conservative", "liberal"))
+  if (missing(method)) method <- method[1]                        
+  method <- match.arg(method, choices = c("ordered", "conservative", "liberal", "dfs"), several.ok = TRUE)
   dotdotdot <- match.arg(dotdotdot, choices = c("warning", "error", "return", "ignore"))
 
   if (substitute) expr <- substitute(expr)
 
   if (trace) {
-    trace_msg <- trace_enter("findGlobals(..., dotdotdot = '%s', method = '%s', unlist = %s)", dotdotdot, method, unlist)
+    methods <- sprintf("'%s'", method)
+    if (length(method) > 1) methods <- sprintf("c(%s)", paste(methods, collapse = ", "))
+    trace_msg <- trace_enter("findGlobals(..., dotdotdot = '%s', method = %s, unlist = %s)", dotdotdot, methods, unlist)
     on.exit(trace_exit(trace_msg))
   }
 
-  debug <- mdebug("findGlobals(..., dotdotdot = '%s', method = '%s', unlist = %s) ...", dotdotdot, method, unlist)
+  debug <- isTRUE(getOption("globals.debug"))
+  if (debug) {
+    methods <- sprintf("'%s'", method)
+    if (length(method) > 1) methods <- sprintf("c(%s)", paste(methods, collapse = ", "))
+    mdebugf_push("findGlobals(..., dotdotdot = '%s', method = %s, unlist = %s) ...", dotdotdot, methods, unlist)
+    on.exit(mdebugf_pop("findGlobals(..., dotdotdot = '%s', method = %s, unlist = %s) ... done", dotdotdot, methods, unlist), add = TRUE)
+  }
+
+  if (length(method) > 1) {
+    if (!unlist) {
+      stop("Argument 'unlist' must be TRUE if more than one 'method' is specified: ", commaq(method))
+    }
+    if (is.function(tweak)) {
+      if (debug) mdebug("tweaking expression using function")
+      expr <- tweak(expr)
+    }
+    globals <- list()
+    for (mtd in method) {
+      globals[[mtd]] <- findGlobals(
+        expr, substitute = FALSE, envir = envir, ...,
+        attributes = attributes, tweak = NULL,
+        dotdotdot = dotdotdot, method = mtd,
+        unlist = TRUE, trace = trace
+      )
+    }
+    globals <- unlist(globals, use.names = FALSE)
+    globals <- globals[!duplicated(globals)]
+    return(globals)
+  } ## if (length(method) > 1)
 
   if (is.logical(attributes)) {
     stop_if_not(length(attributes) == 1L, !is.na(attributes))
@@ -39,7 +70,7 @@ findGlobals <- function(expr, envir = parent.frame(), ...,
   }
   
   if (is.list(expr)) {
-    debug && mdebug(" - expr: <a list of length %d>", .length(expr))
+    if (debug) mdebugf("expr: <a list of length %d>", .length(expr))
 
     ## NOTE: Do *not* look for types that we are interested in, but instead
     ## look for types that we are *not* interested.  The reason for this that
@@ -50,20 +81,15 @@ findGlobals <- function(expr, envir = parent.frame(), ...,
 
     ## Skip elements in 'expr' of basic types that cannot contain globals
     types <- unlist(list_apply(expr, FUN = typeof), use.names = FALSE)
-    keep <- !(types %in% basicTypes)
-
-    ## Don't use expr[keep] here, because that may use S3 dispatching
-    ## depending on class(expr)
-    expr <- .subset(expr, keep)
+    keep <- which(!(types %in% basicTypes))
 
     ## Early stopping?
-    if (.length(expr) == 0) {
-      debug && mdebug(" - globals found: [0] <none>")
-      debug && mdebug("findGlobals(..., dotdotdot = '%s', method = '%s', unlist = %s) ... DONE", dotdotdot, method, unlist) #nolint
+    if (length(keep) == 0) {
+      if (debug) mdebug("globals found: [0] <none>")
       return(character(0L))
     }
-    
-    globals <- list_apply(expr, FUN = findGlobals, envir = envir,
+
+    globals <- list_apply(expr, subset = keep, FUN = findGlobals, envir = envir,
                       attributes = attributes, ...,
                       tweak = tweak, dotdotdot = dotdotdot,
                       method = method,
@@ -72,7 +98,7 @@ findGlobals <- function(expr, envir = parent.frame(), ...,
     
     keep <- types <- NULL ## Not needed anymore
     
-    debug && mdebug(" - preliminary globals found: [%d] %s",
+    if (debug) mdebugf("preliminary globals found: [%d] %s",
                     length(globals), hpaste(sQuote(names(globals))))
 
     if (unlist) {
@@ -83,37 +109,46 @@ findGlobals <- function(expr, envir = parent.frame(), ...,
       if (length(idxs) > 0L) globals <- c(globals[-idxs], globals[idxs])
     }
 
-    debug && mdebug(" - globals found: [%d] %s",
+    if (debug) mdebugf("globals found: [%d] %s",
                     length(globals), hpaste(sQuote(globals)))
-    debug && mdebug("findGlobals(..., dotdotdot = '%s', method = '%s', unlist = %s) ... DONE", dotdotdot, method, unlist) #nolint
-    
     return(globals)
   }
 
   if (is.function(tweak)) {
-    debug && mdebug(" - tweaking expression using function")
+    if (debug) mdebug("tweaking expression using function")
     expr <- tweak(expr)
   }
 
-  if (hasCodetoolsBug16()) {
-    debug && mdebug(" - workaround 'codetools' bug #16")
-    expr <- walkAST(expr, call = tweakCodetoolsBug16)
-  }
+  if (method == "dfs") {
+    globals <- findGlobalsDFS(expr)
+  } else {
+    if (hasCodetoolsBug16()) {
+      if (debug) mdebug("workaround 'codetools' bug #16")
+      expr <- walkAST(expr, call = tweakCodetoolsBug16)
+    }
 
-  if (method == "ordered") {
-    find_globals_t <- find_globals_ordered
-  } else if (method == "conservative") {
-    find_globals_t <- find_globals_conservative
-  } else if (method == "liberal") {
-    find_globals_t <- find_globals_liberal
-  }
+    if (is.expression(expr)) {
+      return(findGlobals(expr[[1]], substitute = substitute, envir = envir,
+                         attributes = attributes, tweak = tweak, ...,
+                         dotdotdot = dotdotdot, method = method,
+                         unlist = unlist, trace = trace))
+    }
 
-  globals <- call_find_globals_with_dotdotdot(find_globals_t, expr = expr, envir = envir, dotdotdot = dotdotdot, trace = trace, debug = debug)
-  idx <- which(globals == "codetools.bugfix16:::$<-")
-  if (length(idx) > 0) {
-    globals[idx] <- "$<-"
-    globals <- unique(globals)
-  }
+    if (method == "ordered") {
+      find_globals_t <- find_globals_ordered
+    } else if (method == "conservative") {
+      find_globals_t <- find_globals_conservative
+    } else if (method == "liberal") {
+      find_globals_t <- find_globals_liberal
+    }
+  
+    globals <- call_find_globals_with_dotdotdot(find_globals_t, expr = expr, envir = envir, dotdotdot = dotdotdot, trace = trace, debug = debug)
+    idx <- which(globals == "codetools.bugfix16:::$<-")
+    if (length(idx) > 0) {
+      globals[idx] <- "$<-"
+      globals <- unique(globals)
+    }
+  } ## if (method == ...)
 
   ## Search attributes?
   if (length(attributes) > 0) {
@@ -124,7 +159,7 @@ findGlobals <- function(expr, envir = parent.frame(), ...,
 
     ## Attributes to be searched, if any
     if (length(attrs) > 0) {
-      debug && mdebug(" - searching attributes")
+      if (debug) mdebug("searching attributes")
       attrs_globals <- list_apply(attrs, FUN = findGlobals, envir = envir,
                                   ## Don't look for attributes recursively
                                   attributes = FALSE,
@@ -137,14 +172,13 @@ findGlobals <- function(expr, envir = parent.frame(), ...,
                                   trace = trace)
       if (unlist) attrs_globals <- unlist(attrs_globals, use.names = FALSE)
       if (length(attrs_globals) > 1L) attrs_globals <- unique(attrs_globals)
-      debug && mdebug(" - globals found in attributes: [%d] %s",
+      if (debug) mdebugf("globals found in attributes: [%d] %s",
                       length(attrs_globals), hpaste(sQuote(attrs_globals)))
       globals <- unique(c(globals, attrs_globals))
     }
   }
-
-  debug && mdebug(" - globals found: [%d] %s", length(globals), hpaste(sQuote(globals)))
-  debug && mdebug("findGlobals(..., dotdotdot = '%s', method = '%s', unlist = %s) ... DONE", dotdotdot, method, unlist) #nolint
+  
+  if (debug) mdebugf("globals found: [%d] %s", length(globals), hpaste(sQuote(globals)))
 
   globals
 }
