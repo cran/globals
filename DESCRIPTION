@@ -1,13 +1,15 @@
 Package: globals
-Version: 0.19.1
+Version: 0.20.0
 Depends: R (>= 3.1.2)
 Imports: codetools
 Title: Identify Global Objects in R Expressions
 Authors@R: c(
     person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
-           email="henrikb@braju.com"),
+           email="henrikb@braju.com",
+           comment = c(ORCID = "0000-0002-7579-5165")),
     person("Davis","Vaughan", role="ctb",
-           email="davis@posit.co"))
+           email="davis@posit.co",
+           comment = c(ORCID = "0000-0003-4777-038X")))
 Description: Identifies global ("unknown" or "free") objects in R expressions
     by code inspection using various strategies (ordered, liberal,
     conservative, or deep-first search). The objective of this package is to
@@ -21,11 +23,12 @@ Encoding: UTF-8
 URL: https://globals.futureverse.org,
         https://github.com/futureverse/globals
 BugReports: https://github.com/futureverse/globals/issues
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.1.0
 NeedsCompilation: no
-Packaged: 2026-03-12 23:06:06 UTC; hb
-Author: Henrik Bengtsson [aut, cre, cph],
-  Davis Vaughan [ctb]
+Packaged: 2026-10-11 19:38:28 UTC; hb
+Author: Henrik Bengtsson [aut, cre, cph] (ORCID:
+    <https://orcid.org/0000-0002-7579-5165>),
+  Davis Vaughan [ctb] (ORCID: <https://orcid.org/0000-0003-4777-038X>)
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
 Repository: CRAN
-Date/Publication: 2026-03-13 07:30:09 UTC
+Date/Publication: 2026-10-11 20:40:02 UTC
